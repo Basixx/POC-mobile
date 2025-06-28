@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.fetesting'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation platform('org.junit:junit-bom:5.10.0')
+    implementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'io.appium:java-client:9.4.0'
+    implementation 'com.google.inject:guice:7.0.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+def allowedPlatforms = ["ios", "android"]
+
+tasks.register("runTests", Test) {
+
+    useJUnitPlatform()
+
+    def platform = project.findProperty("platform") ?: "ios"
+
+    if (!allowedPlatforms.contains(platform)) {
+        throw new GradleException("Invalid platform: $platform. Allowed: $allowedPlatforms")
+    }
+
+    systemProperty "platform", platform
+
+    description = "Runs tests for platform=${platform}"
+    group = "verification"
+
+}
