@@ -14,6 +14,7 @@ dependencies {
     implementation 'org.junit.jupiter:junit-jupiter'
     implementation 'io.appium:java-client:9.4.0'
     implementation 'com.google.inject:guice:7.0.0'
+    implementation 'io.rest-assured:rest-assured:5.5.5'
 }
 
 test {
@@ -22,19 +23,29 @@ test {
 
 def allowedPlatforms = ["ios", "android"]
 
+def allowedEnvironments = ["test", "stage"]
+
 tasks.register("runTests", Test) {
 
     useJUnitPlatform()
 
     def platform = project.findProperty("platform") ?: "ios"
 
+    def environment = project.findProperty("environment") ?: "test"
+
     if (!allowedPlatforms.contains(platform)) {
         throw new GradleException("Invalid platform: $platform. Allowed: $allowedPlatforms")
     }
 
-    systemProperty "platform", platform
+    if (!allowedEnvironments.contains(environment)) {
+        throw new GradleException("Invalid environment: $environment. Allowed: $allowedEnvironments")
+    }
 
-    description = "Runs tests for platform=${platform}"
+
+    systemProperty "platform", platform
+    systemProperty "env", environment
+
+    description = "Runs tests for platform=${platform} and environment=${environment}"
     group = "verification"
 
 }

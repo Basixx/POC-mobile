@@ -12,7 +12,10 @@ public class GuiceInjector {
 
     public static Injector get() {
         if (INJECTOR_HOLDER.get() == null) {
-            INJECTOR_HOLDER.set(Guice.createInjector(new MobileModule()));
+            INJECTOR_HOLDER.set(Guice.createInjector(
+                    new MobileModule(),
+                    new EnvironmentModule()
+            ));
         }
         return INJECTOR_HOLDER.get();
     }
