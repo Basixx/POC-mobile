@@ -11,13 +11,15 @@ import org.mobile.screen.main.AndroidMainScreen;
 import org.mobile.screen.main.IosMainScreen;
 import org.mobile.screen.main.MainScreen;
 
+import static org.mobile.config.injector.Platform.IOS;
+
 public class MobileModule extends AbstractModule {
 
-    private static final String PLATFORM = "ios";
+    private static final Platform PLATFORM = IOS;
 
     @Override
     protected void configure() {
-        String platform = System.getProperty("platform", PLATFORM);
+        String platform = System.getProperty("platform", PLATFORM.name().toLowerCase());
         switch (platform) {
             case "android" -> {
                 bind(MobileDriver.class).to(AndroidDriverProvider.class);
